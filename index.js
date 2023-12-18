@@ -33,6 +33,23 @@ async function run() {
     const blogCollection = client.db("phoneDB").collection("blogs");
     const userCollection = client.db("phoneDB").collection("users");
 
+    //   phone api
+
+    app.get("/phones", async (req, res) => {
+      const cursor = phoneCollection.find();
+      const result = await cursor.toArray();
+
+      res.send(result);
+    });
+
+    app.get("/phones/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await phoneCollection.findOne(query);
+
+      res.send(result);
+    });
+
     //   blog api
 
     app.get("/blogs", async (req, res) => {
