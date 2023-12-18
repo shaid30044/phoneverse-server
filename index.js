@@ -31,6 +31,26 @@ async function run() {
   try {
     const phoneCollection = client.db("phoneDB").collection("phones");
 
+    const blogCollection = client.db("phoneDB").collection("blogs");
+    const userCollection = client.db("phoneDB").collection("users");
+
+    //   blog api
+
+    app.get("/blogs", async (req, res) => {
+      const cursor = blogCollection.find();
+      const result = await cursor.toArray();
+
+      res.send(result);
+    });
+
+    app.get("/blogs/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await blogCollection.findOne(query);
+
+      res.send(result);
+    });
+
     console.log("Pinged your deployment.");
   } finally {
   }
