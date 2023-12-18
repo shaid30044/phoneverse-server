@@ -30,7 +30,6 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const phoneCollection = client.db("phoneDB").collection("phones");
-
     const blogCollection = client.db("phoneDB").collection("blogs");
     const userCollection = client.db("phoneDB").collection("users");
 
@@ -47,6 +46,25 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await blogCollection.findOne(query);
+
+      res.send(result);
+    });
+
+    //   user api
+
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const query = { email: user.email };
+      const existingUser = await userCollection.findOne(query);
+
+      if (existingUser) {
+        return res.send({
+          message: "This user already exist.",
+          insertedId: null,
+        });
+      }
+
+      const result = await userCollection.insertOne(user);
 
       res.send(result);
     });
